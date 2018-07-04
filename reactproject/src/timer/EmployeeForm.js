@@ -117,7 +117,8 @@ class EmployeeForm extends React.Component {
 
   handleChange = name => event => {
     let stateCopy = Object.assign({}, this.state.employee);
-    this.setState(stateCopy);
+    stateCopy[name] = event.target.value;
+    this.setState({employee:stateCopy});
   };
 
 hover=(e,value)=>{
@@ -134,14 +135,14 @@ EmployeeDetailsValidation(){
     
     switch(key){ 
       case 'email':
-        receiveObj = this.emailValidation(this.state.email);
+        receiveObj = this.emailValidation(this.state.employee.email);
         if(!isEmpty(receiveObj)){
           errorMsg[key] = receiveObj.msg;
           errorMsg['is'+key] = receiveObj.isemail;
         }
         break;
       case 'mobile' :
-        receiveObj = this.mobileNumValidation(this.state.mobile);
+        receiveObj = this.mobileNumValidation(this.state.employee.mobile);
         if(!isEmpty(receiveObj)){
           errorMsg[key] = receiveObj.msg;
           errorMsg['is'+key] = receiveObj.ismobile;
@@ -177,7 +178,7 @@ mobileNumValidation(currentValue){
     returnMessage['ismobile']=true;
     returnMessage['msg']=error['mobile'];
   }
-  else if(!this.state.mobile.match(mob)){
+  else if(!this.state.employee.mobile.match(mob)){
     returnMessage['ismobile']=true;
     returnMessage['msg']='mobile number Invalid';
   }
