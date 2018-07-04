@@ -112,7 +112,7 @@ class EmployeeForm extends React.Component {
 
   componentWillMount() {
     if(this.props.dataForEdit.editCount == 1 && this.state.updateID =='')
-      this.EditEvent(this.props.dataForEdit.empId);
+      this.editEvent(this.props.dataForEdit.empId);
   }
 
   handleChange = name => event => {
@@ -128,8 +128,8 @@ hover=(e,value)=>{
 }
 
 
-EmployeeDetailsValidation(){
-  let {employee} = this.state, errorMsg = {},receiveObj={};
+employeeDetailsValidation(){
+  let {employee} = this.state, errorObj = {},receiveObj={};
 
   for(let key in employee){
     
@@ -137,26 +137,26 @@ EmployeeDetailsValidation(){
       case 'email':
         receiveObj = this.emailValidation(this.state.employee.email);
         if(!isEmpty(receiveObj)){
-          errorMsg[key] = receiveObj.msg;
-          errorMsg['is'+key] = receiveObj.isemail;
+          errorObj[key] = receiveObj.msg;
+          errorObj['is'+key] = receiveObj.isemail;
         }
         break;
       case 'mobile' :
         receiveObj = this.mobileNumValidation(this.state.employee.mobile);
         if(!isEmpty(receiveObj)){
-          errorMsg[key] = receiveObj.msg;
-          errorMsg['is'+key] = receiveObj.ismobile;
+          errorObj[key] = receiveObj.msg;
+          errorObj['is'+key] = receiveObj.ismobile;
         }
         break;
       default:
         if(this.state.employee[key].length == 0){
-            errorMsg[key] = error[key];
-            errorMsg['is'+key] = true;
+            errorObj[key] = error[key];
+            errorObj['is'+key] = true;
         }
           
     }
   }
-  return errorMsg;
+  return errorObj;
 }
 
 emailValidation(currentValue){
@@ -178,18 +178,18 @@ mobileNumValidation(currentValue){
     returnMessage['ismobile']=true;
     returnMessage['msg']=error['mobile'];
   }
-  else if(!this.state.employee.mobile.match(mob)){
+  else if(!this.state.employeemobile.match(mob)){
     returnMessage['ismobile']=true;
     returnMessage['msg']='mobile number Invalid';
   }
   return returnMessage;
 }
 
-AddEvent=(e)=>{
+addEvent=(e)=>{
   e.preventDefault();
   this.setState({isErrorMsg:true});
   let isNotDuplicate = true;
-  if(isEmpty(this.EmployeeDetailsValidation())){
+  if(isEmpty(this.employeeDetailsValidation())){
     let lastItemId = 0, withExistData= JSON.parse(localStorage.getItem('Database'));
     let email = this.state.email, mobile = this.state.mobile;
     if(withExistData != null && withExistData.length > 0){
@@ -297,7 +297,7 @@ ModifyEvent=(e,empId)=>{
       alert('Updated sucessfully');
 }
 
-EditEvent(empId){
+editEvent(empId){
   let dbData = JSON.parse(localStorage.getItem('Database'));
   let editDataIndex = dbData.findIndex(data=> data.Id == empId);
   if(editDataIndex >= 0)
@@ -322,7 +322,7 @@ EditEvent(empId){
 
   render() {
     const { classes } = this.props;
-    let warningMessage = this.state.isErrorMsg?this.EmployeeDetailsValidation():{};
+    let errorMessage = this.state.isErrorMsg?this.employeeDetailsValidation():{};
     return (
       <form className={classes.container} noValidate autoComplete="off">
         <TextField required
@@ -330,8 +330,8 @@ EditEvent(empId){
           className={classes.textField}
           value={this.state.employee.name}
           onChange={this.handleChange('name')}
-          error={warningMessage.isname}
-          helperText={warningMessage.name}
+          error={errorMessage.isname}
+          helperText={errorMessage.name}
           margin="normal"
         />
         
@@ -347,8 +347,8 @@ EditEvent(empId){
               className: classes.menu,
             },
           }}
-          error={warningMessage.isrole}
-          helperText={warningMessage.role}
+          error={errorMessage.isrole}
+          helperText={errorMessage.role}
           margin="normal"
         >
           {roles.map(option => (
@@ -368,8 +368,8 @@ EditEvent(empId){
           InputLabelProps={{
             shrink: true,
           }}
-          error={warningMessage.isDOB}
-          helperText={warningMessage.DOB}
+          error={errorMessage.isDOB}
+          helperText={errorMessage.DOB}
           margin="normal"
           />
 
@@ -379,8 +379,8 @@ EditEvent(empId){
           className={classes.textField}
           value={this.state.employee.email}
           onChange={this.handleChange('email')}
-          error={warningMessage.isemail}
-          helperText={warningMessage.email}
+          error={errorMessage.isemail}
+          helperText={errorMessage.email}
           margin="normal"
         />
                 
@@ -391,8 +391,8 @@ EditEvent(empId){
           className={classes.textField}
           value={this.state.employee.address}
           onChange={this.handleChange('address')}
-          error={warningMessage.isaddress}
-          helperText={warningMessage.address}
+          error={errorMessage.isaddress}
+          helperText={errorMessage.address}
           margin="normal"
         />
         
@@ -402,8 +402,8 @@ EditEvent(empId){
           onChange={this.handleChange('age')}
           type="number"
           className={classes.textField}
-          error={warningMessage.isage}
-          helperText={warningMessage.age}
+          error={errorMessage.isage}
+          helperText={errorMessage.age}
           margin="normal"
         />
         
@@ -413,8 +413,8 @@ EditEvent(empId){
           onChange={this.handleChange('mobile')}
           type="number"
           className={classes.textField}
-          error={warningMessage.ismobile}
-          helperText={warningMessage.mobile}
+          error={errorMessage.ismobile}
+          helperText={errorMessage.mobile}
           margin="normal"
         />
         
@@ -430,8 +430,8 @@ EditEvent(empId){
               className: classes.menu,
             },
           }}
-          error={warningMessage.isnation}
-          helperText={warningMessage.nation}
+          error={errorMessage.isnation}
+          helperText={errorMessage.nation}
           margin="normal"
         >
           {nations.map(option => (
@@ -440,7 +440,7 @@ EditEvent(empId){
             </option>
           ))}
         </TextField>
-        <EmployeeCUbuttons data={this.state} saveClick={this.AddEvent} clearClick={this.ClearEvent} updateClick={this.ModifyEvent}/>
+        <EmployeeCUbuttons data={this.state} saveClick={this.addEvent} clearClick={this.ClearEvent} updateClick={this.ModifyEvent}/>
       </form>
     );
   }
