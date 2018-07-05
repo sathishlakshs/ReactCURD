@@ -178,7 +178,7 @@ mobileNumValidation(currentValue){
     returnMessage['ismobile']=true;
     returnMessage['msg']=error['mobile'];
   }
-  else if(!this.state.employeemobile.match(mob)){
+  else if(!this.state.employee.mobile.match(mob)){
     returnMessage['ismobile']=true;
     returnMessage['msg']='mobile number Invalid';
   }
@@ -239,7 +239,7 @@ addEvent=(e)=>{
   }
 }
 
-ClearEvent=(e)=>{
+clearEvent=(e)=>{
   e.preventDefault();
   this.setState({
         Id:'',
@@ -259,7 +259,7 @@ ClearEvent=(e)=>{
 }
 
 
-ModifyEvent=(e,empId)=>{
+modifyEvent=(e,empId)=>{
   e.preventDefault();
   this.setState({isErrorMsg:true});
   let dbData = JSON.parse(localStorage.getItem('Database'));
@@ -440,7 +440,7 @@ editEvent(empId){
             </option>
           ))}
         </TextField>
-        <EmployeeCUbuttons data={this.state} saveClick={this.addEvent} clearClick={this.ClearEvent} updateClick={this.ModifyEvent}/>
+        <EmployeeCUbuttons data={this.state} saveClick={this.addEvent} clearClick={this.clearEvent} updateClick={this.modifyEvent}/>
       </form>
     );
   }

@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import EmployeeForm from './EmployeeForm';
 import EmployeeList from './EmployeeList';
+import Timer from './Timer';
 
 function TabContainer(props) {
   return (
@@ -27,6 +28,8 @@ const styles = theme => ({
   },
 });
 
+
+
 class ParentComponent extends React.Component {
   state = {
     value: 0,
@@ -34,7 +37,8 @@ class ParentComponent extends React.Component {
     action:'',
     delete:false,
     hover:-1,
-    editCount:0
+    editCount:0,
+    timerCount:0
   };
 
   handleChange = (event, value) => {
@@ -42,8 +46,10 @@ class ParentComponent extends React.Component {
       value:value,
       empId:'',
       action:'',
-      editCount:0
+      editCount:0,
+      timerCount:0
      });
+     this.loadingInterval();
   };
 
 
@@ -63,8 +69,25 @@ hover=(e,value)=>{
     hover:value
   });
 }
+componentDidMount(){
+  this.loadingInterval();
+}
 
-RemoveEvent=(e,empId)=>{
+loadingInterval(){
+  this.setState({timerCount:0})
+  this.timer = setInterval(this.loadingTimer.bind(this), 1000)  
+}
+
+loadingTimer(){
+  this.setState({timerCount:(this.state.timerCount + 1)});
+  console.log(this.state.timerCount);
+  if(this.state.timerCount >= 5){
+    clearInterval(this.timer);
+  }
+}
+
+
+removeEvent=(e,empId)=>{
   e.preventDefault();
   let dbData=JSON.parse(localStorage.getItem('Database'));
   let deleteDataIndex = dbData.findIndex(data=> data.Id == empId);
@@ -78,6 +101,14 @@ RemoveEvent=(e,empId)=>{
 render() {
     const { classes } = this.props;
     const { value } = this.state;
+    let tabs = <div className='loadCenter'><div><img src={require('../images/loading.gif')} alert='not render' width='100' height='100'/></div><div>loading...</div></div>;
+    if(this.state.timerCount >= 5){
+      tabs = <div>
+        {value === 0 && <EmployeeForm dataForEdit = {this.state}/>}
+        {value === 1 && <EmployeeList hover={this.hover} hoverValue={this.state.hover} getIdEvent={this.getIdEvent} deleteEvent={this.removeEvent}/>}
+      </div>;
+    }
+
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -86,8 +117,7 @@ render() {
             <Tab label="Database" href="#database" />
           </Tabs>
         </AppBar>
-        {value === 0 && <EmployeeForm dataForEdit = {this.state}/>}
-        {value === 1 && <EmployeeList hover={this.hover} hoverValue={this.state.hover} getIdEvent={this.getIdEvent} deleteEvent={this.RemoveEvent}/>}
+        {tabs}
       </div>
     );
   }
