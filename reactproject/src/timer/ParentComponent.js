@@ -81,7 +81,7 @@ loadingInterval(){
 loadingTimer(){
   this.setState({timerCount:(this.state.timerCount + 1)});
   console.log(this.state.timerCount);
-  if(this.state.timerCount >= 5){
+  if(this.state.timerCount >= 2){
     clearInterval(this.timer);
   }
 }
@@ -102,7 +102,7 @@ render() {
     const { classes } = this.props;
     const { value } = this.state;
     let tabs = <div className='loadCenter'><div><img src={require('../images/loading.gif')} alert='not render' width='100' height='100'/></div><div>loading...</div></div>;
-    if(this.state.timerCount >= 5){
+    if(this.state.timerCount >= 2){
       tabs = <div>
         {value === 0 && <EmployeeForm dataForEdit = {this.state}/>}
         {value === 1 && <EmployeeList hover={this.hover} hoverValue={this.state.hover} getIdEvent={this.getIdEvent} deleteEvent={this.removeEvent}/>}
